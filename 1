@@ -1,0 +1,106 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+
+using namespace std;
+
+class Student
+{
+protected:
+    string name;
+    int age;
+
+public:
+   
+    Student(string name = "Unknown", int age = 0) : name(name), age(age) {}
+
+    virtual ~Student() {}
+
+    virtual void displayInfo() const 
+    {
+        cout << "Студент: " << name << ", Вiк: " << age << endl;
+    }
+
+    
+    virtual void saveToFile(ofstream& file) const 
+    {
+        file << "Студент: " << name << ", Вiк: " << age << endl;
+    }
+};
+
+class Actor : public Student
+{
+protected:
+    string role;
+
+public:
+ 
+    Actor(string name = "Unknown", int age = 0, string role = "Unknown")
+        : Student(name, age), role(role) {}
+
+    ~Actor() override {}
+
+    
+    void displayInfo() const override 
+    {
+        cout << "Актор: " << name << ", Вiк: " << age << ", Роль: " << role << endl;
+    }
+
+    void saveToFile(ofstream& file) const override 
+    {
+        file << "Актор: " << name << ", Вiк: " << age << ", Роль: " << role << endl;
+    }
+};
+
+
+class KvnParticipant : public Actor 
+{
+private:
+    string teamName;
+
+public:
+    
+    KvnParticipant(string name = "Unknown", int age = 0, string role = "Unknown", string teamName = "Unknown")
+        : Actor(name, age, role), teamName(teamName) {}
+
+    ~KvnParticipant() override {}
+
+    void displayInfo() const override 
+    {
+        cout << "Учасник КВН: " << name << ", Вiк: " << age << ", Роль: " << role << ", Команда: " << teamName << endl;
+    }
+
+   
+    void saveToFile(ofstream& file) const override 
+    {
+        file << "Учасник КВН: " << name << ", Вiк: " << age << ", Роль: " << role << ", Команда: " << teamName << endl;
+    }
+};
+
+int main() 
+{
+    setlocale(LC_ALL, "Ukrainian");
+    Student student("Iван", 20);
+    Actor actor("Марiя", 22, "Головна роль");
+    KvnParticipant kvn("Олександр", 23, "Капiтан", "Веселi хлопцi");
+
+    student.displayInfo();
+    actor.displayInfo();
+    kvn.displayInfo();
+
+    ofstream file("output.txt");
+    if (file.is_open())
+    {
+        student.saveToFile(file);
+        actor.saveToFile(file);
+        kvn.saveToFile(file);
+        file.close();
+        cout << "Iнформацію записано в файл output.txt" << endl;
+    }
+    else 
+    {
+        cerr << "Не вдалося вiдкрити файл для запису!" << endl;
+    }
+
+    return 0;
+}
